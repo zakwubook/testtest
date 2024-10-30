@@ -5,6 +5,7 @@ from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import time
 
 
 def check_credentials(username, password):
@@ -17,7 +18,8 @@ def check_credentials(username, password):
     
     # Переход на страницу входа
     driver.get('https://wubook.net/wauth/wauth/')
-    
+    print(driver.page_source)  # Вывод HTML-кода страницы
+    time.sleep(100)
     # Явные ожидания для полей ввода
     wait = WebDriverWait(driver, 10)  # 10 секунд ожидания
     username_input = wait.until(EC.presence_of_element_located((By.ID, "wauth_user")))
