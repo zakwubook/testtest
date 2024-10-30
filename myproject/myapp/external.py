@@ -3,28 +3,39 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.by import By
-import time
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 def check_credentials(username, password):
     options = Options()
     options.add_argument('--headless')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
+    
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+    
+    # Переход на страницу входа
     driver.get('https://wubook.net/wauth/wauth/')
+    
+    # Явные ожидания для полей ввода
+    wait = WebDriverWait(driver, 10)  # 10 секунд ожидания
+    username_input = wait.until(EC.presence_of_element_located((By.ID, "wauth_user")))
+    password_input = wait.until(EC.presence_of_element_located((By.ID, "wauth_password")))
+
     # Вводим логин и пароль
-    username_input = driver.find_element(By.ID, "wauth_user")
-    password_input = driver.find_element(By.ID, "wauth_password")
     username_input.send_keys(username)
     password_input.send_keys(password)
     
     # Нажимаем кнопку входа
-    login_button = driver.find_element(By.XPATH, "//button[@type='submit']")
+    login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
     login_button.click()
     
-    time.sleep(2)  # Ждем загрузки страницы
+    # Ждем загрузки страницы после входа
+    wait.until(EC.presence_of_element_located((By.XPATH, "//body")))  # Замените на более специфичный селектор, если возможно
 
-    if "Authentication Failed" not in driver.page_source:
+    # Проверяем, произошла ли ошибка аутентификации
+    if "Authentication Failed" in driver.page_source:
         driver.quit()
         return False
     else:
