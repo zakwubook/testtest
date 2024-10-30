@@ -33,8 +33,9 @@ def check_credentials(username, password):
         
         # Ждем, пока URL изменится
         wait.until(EC.url_changes(driver.current_url))
-
+        print(driver.current_url)
         # Проверяем, на какую страницу мы перенаправлены
+        print(driver.page_source)
         if driver.current_url == "https://wubook.net/zks/manage/dboard/":
             return True
         else:
