@@ -1,9 +1,16 @@
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 import time
 
 def check_credentials(username, password):
-    driver = webdriver.Chrome()  # Убедитесь, что chromedriver находится в PATH
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Запуск в безголовом режиме
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    service = Service('/usr/bin/chromedriver')
+    driver = webdriver.Chrome(service=service, options=chrome_options)
     driver.get("https://wubook.net/wauth/wauth/__login__/?autologin=wauth")
     
     # Вводим логин и пароль
