@@ -41,10 +41,7 @@ def check_credentials(username, password):
         # Нажимаем кнопку входа
         login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
         login_button.click()
-        
-        # Ждем загрузки страницы после входа
-        wait.until(EC.presence_of_element_located((By.XPATH, "//body")))  # Замените на более специфичный селектор, если возможно
-
+        print(driver.page_source)
         # Проверяем, произошла ли ошибка аутентификации
         if "Authentication Failed" in driver.page_source:
             return False
