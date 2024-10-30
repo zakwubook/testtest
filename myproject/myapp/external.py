@@ -36,7 +36,7 @@ def check_credentials(username, password):
         print(driver.current_url)
         # Проверяем, на какую страницу мы перенаправлены
         print(driver.page_source)
-        if driver.current_url == "https://wubook.net/zks/manage/dboard/":
+        if driver.current_url == "https://wubook.net/wauth/wauth/?autologin=wauth":
             return True
         else:
             return False
