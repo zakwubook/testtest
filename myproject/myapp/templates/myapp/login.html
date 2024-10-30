@@ -1,0 +1,223 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+    {% load static %}
+	<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>WuBook Login</title>
+		<script src="https://static.wubook.net/js/rewauth/wba.jgz?r=3fe3ea07fe1322df19feb25b214145bd"></script>
+    <link href="https://static.wubook.net/css/rewauth/wba.cgz?r=62ab24dbf87a231019a8343ad3243563" rel="stylesheet" type="text/css" />
+    <img src="https://wubook.net/imgs/default/gear.png" class="wb_load" style="display:none">
+	<link rel="icon" href="https://i.postimg.cc/521jG0tc/favicon.png" type="image/png">
+    <script>
+      _pwdtoberecovered= 'An email has been sent. To complete the procedure, please, check your Inbox';
+      _change_password_not_allowed= 'The password cannot be changed. Please contact your dealer to change the password';
+      _auth_fail_= 'Authentication Failed';
+      $(document).ready(function() {
+        wauthSetLang();
+        wopid_or_clogin();
+        wauthRecoverPsw();
+      });
+    </script>
+	</head>
+	<style type="text/css" media="screen">
+		.box_body {
+		  margin: 96px auto 44px;
+		  padding: 24px 0;
+		}
+		.two_of_three {
+			display: flex;
+		}
+		.two_of_three .half_left,
+		.two_of_three .half_right {
+			padding: 28px;
+	    width: calc(50% - 62px);
+		}
+		.two_of_three .half_left {
+			padding: 28px 28px 56px 28px; 
+		}
+		.login_input {
+			text-align: center;
+		}
+		.absolute_line {
+			position: absolute;
+			right: 28px;
+			bottom: 28px;
+		}
+		.one_of_three {
+			padding: 28px;
+		  width: calc(34% - 56px);
+		  background-color: #f9f9f9;
+		  border: 1px solid #eee;
+		}
+	</style>
+	<div id="login_loader" style="display: none;">
+		<div>
+			<img style="height: 46px;" src="https://i.postimg.cc/xC72SsyJ/wubook-logo-header.png" />
+			<div class="clear"></div>
+			<span class="login_dots"><span class="login_dot"></span><span style="animation-delay: 250ms;" class="login_dot"></span><span style="animation-delay: 500ms;" class="login_dot"></span></span>
+			<div class="clear"></div>
+			<span class="login_text">Logging in, please wait</span>			
+		</div>
+	</div>
+	<body>
+	  <div id="wb_header">
+  		<div id="wb_header_top_bar">
+ 		   <a href="#" id="mini_logo">
+ 		     <img src="https://i.postimg.cc/xC72SsyJ/wubook-logo-header.png" alt="WuBook Account" title="WuBook Account" style="height: 100%;width: auto;" />
+ 		   </a>
+ 		   <div id="wb_top_bar_buttons">
+					<div id="wb_top_buttons">
+						<select id="switchlang_log" class="wb_button_top trans_bgcol_200">
+							<option value="en">en</option>
+							<option value="it">it</option>
+							<option value="es">es</option>
+							<option value="fr">fr</option>
+							<option value="br">br</option>
+							<option value="gr">gr</option>
+							<option value="ru">ru</option>
+						</select>
+						<div class="clear"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="box_body">
+			<div id="wb_login">
+				<div style="display: flex;">
+					<div class="two_of_three">
+						<div class="half_left">
+							<h1 class="blue_title">
+								Login
+							</h1>
+
+              <div class="div_buttons" id="wb_login_gear" style="display:none">
+                <img src="https://static.wubook.net/imgs/default/gear_running_big.gif" />
+              </div>
+              <form method="POST" action="{% url 'login_view' %}">
+                  {% csrf_token %}
+                  
+                  <div class="login_input" id="wb_login_input" style="display:none">
+                      <div class="line_margin_bottom">
+                          <input class="full_input" type="text" id="wauth_user" name="username" placeholder="Username" required>
+                      </div>
+                      <div class="line_margin_bottom">
+                          <input class="full_input" type="password" id="wauth_password" name="password" placeholder="Password" required>
+                      </div>
+                  </div>
+								<div class="line_margin_bottom">
+									<select id="autologin_selector" style="width: 257px;line-height: 30px;">
+										<option value="wauth">WuBook Account</option>
+										<option value="zak">Zak</option>
+										<option value="woodoo">WooDoo</option>
+									</select>
+								</div>
+								<div class="buttons_box div_buttons" style="text-align: right;">
+									<button class="wb_button_orange" type="submit" onclick="wauth_login(this)">
+										Sign in
+									</button>
+								</div>
+								<div class="absolute_line">
+									<a href="javascript:void(0)" onclick="recoveryPsw()">
+										Password recovery
+									</a>
+								</div>
+							</div>
+
+						</div>
+
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div id="recovery_pswrd" style="display: none">
+				<div class="wba_content" style="width: 560px;">
+					<h2 class="blue_title">
+						Password Recovery
+					</h2>
+					<p class="standard_text">
+						Password Recovery Procedure
+					</p>
+					<ul style="list-style-type: number;">
+						<li>
+							<p class="standard_text">
+								Insert your Account Code
+	              (
+								<a href="javascript:void(0)" onclick="pleaseContactUs()">
+									I don't remember it
+								</a>
+	              )
+							</p>
+						</li>
+						<li>
+							<p class="standard_text">
+								You will receive an email in few minutes
+	              (
+								<a href="javascript:void(0)" onclick="pleaseContactUs()">
+									No email access
+								</a>
+	              )
+							</p>
+						</li>
+						<li>
+							<p class="standard_text">
+								Open it: you will find a link and a secret code
+							</p>
+						</li>
+						<li>
+							<p class="standard_text">
+								Visit the link keeping the secret code in mind
+							</p>
+						</li>
+					</ul>
+					<b class="standard_text" style="margin-bottom: 12px;">
+						From the step 1, you have an hour. Than, the procedure will be cancelled
+					</b>
+					<div class="line_margin_bottom">
+						<label>
+							<p class="standard_text">
+								Specify your account code:
+							</p>
+							<input type="text" id="wauth_recovery_acode" />
+						</label>
+						<button class="wb_button_blue" type="submit" onclick="wauthRecoveryPwd(this)">
+							Send email
+						</button>
+						<img src="https://static.wubook.net/imgs/default/load.gif" style="display: none;" class="load" />
+					</div>
+				</div>
+			</div>
+			<div id="message_mail_sent" style="display: none; text-align: center;">
+				<p class="standard_text">
+					Thank you.
+					<br />
+					If the account code specified is valid, you will receive a mail in few seconds
+				</p>
+			</div>
+			<div id="please_contact_us" style="display: none;">
+				<div class="wba_content">
+					<p class="information_box" style="width: 50%; margin: 40px auto; padding: 20px; font-size: 16px; text-align: center;">
+						Please, contact us at the following address:
+						<br />
+	          <b>h<span>el</span>p<span>@wu</span><span></span>book<span>.</span>net</b>
+						<br />
+						We will help you as soon as possible.
+					</p>
+					<div class="buttons_box">
+						<button type="submit" class="wb_button_dgray" onclick="backRecovery()">
+							Back
+						</button>
+					</div>
+				</div>
+			</div>
+	    <img src="https://static.wubook.net/imgs/default/load.png" style="display:none" />
+	  </div>
+	</body>
+	<footer id="wb_footer" style="display:none">
+		<div class="line_margin_bottom">
+			<p style="margin: 4px 0;">
+				<a href="https://wubook.net">WuBook </a>
+				is an italian company located in Fano <span class="vert_line">|</span> Via Nolfi n.56 (61032, PU) - Italy<span class="vert_line">|</span> Vat number: 02340220413, REA: PS-173884
+			</p>
+		</div>
+	</footer>
+</html>

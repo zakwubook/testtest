@@ -1,0 +1,15 @@
+services:
+  web:
+    build: ./myproject
+    image: wubook:1.0.0
+    command: gunicorn myproject.wsgi:application --bind 0.0.0.0:8000 --access-logfile '-'
+    expose:
+      - 8000
+    env_file:
+      - ./myproject/.env
+  nginx:
+    image: nginx:alpine-slim
+    volumes:
+      - ./conf.d:/etc/nginx/conf.d
+    ports:
+      - 80:80
